@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Des 2023 pada 22.09
--- Versi server: 10.4.16-MariaDB
--- Versi PHP: 7.4.12
+-- Waktu pembuatan: 10 Jan 2024 pada 14.03
+-- Versi server: 10.4.14-MariaDB
+-- Versi PHP: 7.4.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -121,7 +121,8 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id_user`, `nama_user`, `email`, `password`, `telp`, `alamat`) VALUES
-(4, 'budi', 'budi@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '082165443677', 'padang');
+(4, 'budi', 'budi@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '082165443677', 'padang'),
+(5, 'rita', 'rita@gmail.com', '25d55ad283aa400af464c76d713c07ad', '082165443677', 'Padang');
 
 -- --------------------------------------------------------
 
@@ -151,6 +152,27 @@ INSERT INTO `paket` (`id_paket`, `nama_paket`, `harga`, `ket_paket`, `foto_paket
 (10, 'PACKAGE 1 FROM PICT STORY', 9000000, '•	Wedding service akad dan resepsi full (full service)\r\n•	Cetak 4R 240 lembar + album (edit)\r\n•	1 lembar 20R plus + frame\r\n•	2 lembar 16R plus + frame\r\n•	2 lembar 10R plus + frame\r\n•	Soft copy all file+ flashdisk\r\n•	Free prewedding indoor + outdoor\r\n•	Free pajangan 20R plus 2 lembar + frame \r\n•	4 Profesional photographers', '24122023214823).png'),
 (11, 'PACKAGE 2 FROM PICT STORY', 7500000, '•	Wedding service akad dan resepsi full (full service)\r\n•	Cetak 4R 180 lembar + album (edit)\r\n•	2 lembar 16R plus + frame\r\n•	1 lembar 20R plus + frame\r\n•	2 lembar 10R plus\r\n•	Soft copy all file+ flashdisk\r\n•	Free pajangan 20R plus 1 lembar  \r\n•	3 Profesional photographers\r\n', '24122023215040).png'),
 (12, 'PACKAGE 3 FROM PICT STORY', 6500000, '•	Wedding service akad dan resepsi full (full service)\r\n•	Cetak 4R 180 lembar + album (edit)\r\n•	1 lembar 20R plus + frame\r\n•	2 lembar 16R plus\r\n•	2 lembar 20R plus + frame\r\n•	Soft copy all file+ flashdisk\r\n•	3 Profesional photographers', '24122023215248).png');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pengeluaran`
+--
+
+CREATE TABLE `pengeluaran` (
+  `id_pengeluaran` int(11) NOT NULL,
+  `keperluan` varchar(150) DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
+  `uang_keluar` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `pengeluaran`
+--
+
+INSERT INTO `pengeluaran` (`id_pengeluaran`, `keperluan`, `tanggal`, `uang_keluar`) VALUES
+(2, 'Beli Kamera', '2024-01-10', 10000000),
+(3, 'beli drone', '2024-01-10', 2000000);
 
 -- --------------------------------------------------------
 
@@ -193,15 +215,18 @@ CREATE TABLE `transaksi` (
   `catatan` text NOT NULL,
   `tgl_bayar` date NOT NULL,
   `bukti_bayar` text NOT NULL,
-  `ubah_tgl` int(1) NOT NULL
+  `ubah_tgl` int(1) NOT NULL,
+  `pemasukkan` int(25) NOT NULL,
+  `total_pemasukkan` int(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `transaksi`
 --
 
-INSERT INTO `transaksi` (`id_trx`, `email`, `id_paket`, `tgl_trx`, `stt_trx`, `tgl_take`, `jam_take`, `catatan`, `tgl_bayar`, `bukti_bayar`, `ubah_tgl`) VALUES
-('24122023215559', 'budi@gmail.com', 7, '2023-12-24', 'Selesai', '2023-12-25', '07:00', 'On time ya', '2023-12-25', '25122023035629GOLD (9).png', 0);
+INSERT INTO `transaksi` (`id_trx`, `email`, `id_paket`, `tgl_trx`, `stt_trx`, `tgl_take`, `jam_take`, `catatan`, `tgl_bayar`, `bukti_bayar`, `ubah_tgl`, `pemasukkan`, `total_pemasukkan`) VALUES
+('10012024124945', 'rita@gmail.com', 4, '2024-01-10', 'Sudah Dibayar', '2024-01-11', '08:00', 'Done', '2024-01-10', '10012024184953asal 2.png', 0, 11000000, 0),
+('10012024125010', 'rita@gmail.com', 7, '2024-01-10', 'Selesai', '2024-01-10', '07:00', 'Done', '2024-01-10', '10012024185054asal 2.png', 0, 1200000, 0);
 
 --
 -- Indexes for dumped tables
@@ -242,6 +267,12 @@ ALTER TABLE `member`
 --
 ALTER TABLE `paket`
   ADD PRIMARY KEY (`id_paket`);
+
+--
+-- Indeks untuk tabel `pengeluaran`
+--
+ALTER TABLE `pengeluaran`
+  ADD PRIMARY KEY (`id_pengeluaran`);
 
 --
 -- Indeks untuk tabel `tblpages`
@@ -287,13 +318,19 @@ ALTER TABLE `galery`
 -- AUTO_INCREMENT untuk tabel `member`
 --
 ALTER TABLE `member`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `paket`
 --
 ALTER TABLE `paket`
   MODIFY `id_paket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT untuk tabel `pengeluaran`
+--
+ALTER TABLE `pengeluaran`
+  MODIFY `id_pengeluaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tblpages`
