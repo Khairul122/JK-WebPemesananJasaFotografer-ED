@@ -12,6 +12,7 @@
 				<li><a href="jadwal.php"><i class="fa fa-book"></i> Jadwal Hari Ini</a></li>
 				<li><a href="paket.php"><i class="fa fa-cart-plus"></i> Paket</a></li>
 				<li><a href="reg-users.php"><i class="fa fa-users"></i> Member</a></li>
+				<li><a href="pengeluaran.php"><i class="fa fa-book"></i>Pengeluaran</a></li>
 				<li><a href="gallery.php"><i class="fa fa-users"></i> Gellery</a></li>
 				<li><a href="manage-conactusquery.php"><i class="fa fa-phone"></i> Menghubungi</a></li>
 				<li><a href="manage-pages.php"><i class="fa fa-gear"></i> Kelola Halaman</a></li>
