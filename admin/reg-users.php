@@ -83,7 +83,7 @@ else{
 									?>	
 										<tr>
 											<td><?php echo $no;?></td>
-											<td><?php echo htmlentities($result['nama_member']);?></td>
+											<td><?php echo htmlentities($result['nama_user']);?></td>
 											<td><?php echo htmlentities($result['email']);?></td>
 											<td><?php echo htmlentities($result['telp']);?></td>
 											<td><?php echo htmlentities($result['alamat']);?></td>
