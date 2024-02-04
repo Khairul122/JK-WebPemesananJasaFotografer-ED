@@ -57,6 +57,8 @@ if (strlen($_SESSION['ulogin']) == 0) {
         $query1 = mysqli_query($koneksidb, $sql1);
         $result = mysqli_fetch_array($query1);
         $harga    = $result['harga'];
+        $durasi = $result['durasi'];
+        $totalsewa = $durasi * $harga;
         $tglmulai = strtotime($result['tgl_take']);
         $jmlhari  = 86400 * 1;
         $tgl      = $tglmulai - $jmlhari;
@@ -64,65 +66,67 @@ if (strlen($_SESSION['ulogin']) == 0) {
         ?>
         <section class="user_profile inner_pages">
             <center>
-                <h3>Detail Booking</h3>
+                <h3>Edit Data Booking</h3>
             </center>
             <div class="container">
                 <div class="user_profile_info">
                     <div class="col-md-12 col-sm-10">
-                        <form method="post" name="sewa" onSubmit="return valid();">
+                        <form method="post" action="update_booking.php" name="sewa" onSubmit="return valid();" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" name="id" value="<?php echo $kode; ?>" required>
                             <div class="form-group">
                                 <label>Kode Booking</label>
-                                <input type="text" class="form-control" name="id" value="<?php echo $result['id_trx']; ?>" readonly>
+                                <input type="text" class="form-control" name="id_trx" value="<?php echo $result['id_trx']; ?>" readonly>
                             </div>
+                            <input type="hidden" class="form-control" name="vid" value="<?php echo $vid; ?>" required>
                             <div class="form-group">
                                 <label>Paket</label>
-                                <input type="text" class="form-control" name="mobil" value="<?php echo $result['nama_paket']; ?>" readonly>
+                                <select class="form-control" name="id_paket" id="id_paket">
+                                    <?php
+                                    $query_paket = mysqli_query($koneksidb, "SELECT * FROM paket");
+                                    while ($row_paket = mysqli_fetch_assoc($query_paket)) {
+                                        $selected = ($row_paket['id_paket'] == $result['id_paket']) ? 'selected' : '';
+                                        echo "<option value='{$row_paket['id_paket']}' {$selected} data-harga='{$row_paket['harga']}'>{$row_paket['nama_paket']}</option>";
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Tanggal Take</label>
-                                <input type="text" class="form-control" name="fromdate" placeholder="From Date(dd/mm/yyyy)" value="<?php echo IndonesiaTgl($result['tgl_take']); ?>" readonly>
+                                <input type="date" class="form-control" name="tgl_take" placeholder="" value="<?php echo IndonesiaTgl($result['tgl_take']); ?>">
                             </div>
                             <div class="form-group">
-                                <label>Jam</label>
-                                <input type="text" class="form-control" name="todate" placeholder="To Date(dd/mm/yyyy)" value="<?php echo $result['jam_take']; ?>" readonly>
+                                <label>Jam Take</label><br />
+                                <select class="form-control" name="jam_take" required>
+                                    <option value="" selected>== Pilih Jam ==</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Biaya</label><br />
-                                <input type="text" class="form-control" name="total" value="<?php echo format_rupiah($result['harga']); ?>" readonly>
+                                <input type="text" class="form-control" name="pemasukkan" value="" readonly>
                             </div>
+
                             <div class="form-group">
                                 <label>Catatan</label><br />
-                                <textarea class="form-control" readonly><?php echo $result['catatan']; ?></textarea>
+                                <textarea class="form-control" name="catatan"><?php echo $result['catatan']; ?></textarea>
                             </div>
-                            <?php if ($result['stt_trx'] == "Menunggu Pembayaran") {
-                                $sqlrek     = "SELECT * FROM tblpages WHERE id='5'";
-                                $queryrek = mysqli_query($koneksidb, $sqlrek);
-                                $resultrek = mysqli_fetch_array($queryrek);
-                            ?>
-                                <b>*Silahkan transfer total biaya ke <?php echo $resultrek['detail']; ?> maksimal tanggal <?php echo IndonesiaTgl($tglhasil); ?>.
-                                <?php
-                            } else {
-                            } ?>
-                                </b>
-                                <br /><br />
-                                <div class="form-group">
-                                    <a href="detail_cetak.php?kode=<?php echo $kode; ?>" target="_blank" class="btn btn-primary btn-xs">Cetak</a>
-                                    <?php
-                                    $kode = $_GET['kode'];
 
-                                    $query_stt_trx = mysqli_query($koneksidb, "SELECT stt_trx FROM transaksi WHERE id_trx='$kode'");
-                                    $row_stt_trx = mysqli_fetch_assoc($query_stt_trx);
-
-                                    $stt_trx = $row_stt_trx['stt_trx'];
-
-                                    $display_edit_button = ($stt_trx !== 'Sudah Dibayar');
-
-                                    if ($display_edit_button) {
-                                        echo "<a href='booking_edit1.php?kode={$kode}' class='btn btn-warning btn-xs'>Edit</a>";
-                                    }
-                                    ?>
-                                </div>
-
+                            <div class="hr-dashed"></div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit" name="submit">Submit</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -145,4 +149,14 @@ if (strlen($_SESSION['ulogin']) == 0) {
     </body>
 
     </html>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#id_paket").change(function() {
+                var harga = $("option:selected", this).data("harga");
+                $("input[name='pemasukkan']").val(harga);
+            });
+        });
+    </script>
+
 <?php } ?>

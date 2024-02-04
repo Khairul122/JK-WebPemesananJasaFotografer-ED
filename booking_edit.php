@@ -71,58 +71,37 @@ if (strlen($_SESSION['ulogin']) == 0) {
             <div class="container">
                 <div class="user_profile_info">
                     <div class="col-md-12 col-sm-10">
-                        <form method="post" action="update_booking.php" name="sewa" onSubmit="return valid();" enctype="multipart/form-data">
+                        <form method="post" action="update_sewa.php" name="sewa" onSubmit="return valid();" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="id" value="<?php echo $kode; ?>" required>
                             <div class="form-group">
                                 <label>Kode Booking</label>
-                                <input type="text" class="form-control" name="id_trx" value="<?php echo $result['id_trx']; ?>" readonly>
+                                <input type="text" class="form-control" name="kode" value="<?php echo $result['id_trx']; ?>" readonly>
                             </div>
                             <input type="hidden" class="form-control" name="vid" value="<?php echo $vid; ?>" required>
                             <div class="form-group">
                                 <label>Paket</label>
-                                <select class="form-control" name="id_paket" id="id_paket">
-                                    <?php
-                                    $query_paket = mysqli_query($koneksidb, "SELECT * FROM paket");
-                                    while ($row_paket = mysqli_fetch_assoc($query_paket)) {
-                                        $selected = ($row_paket['id_paket'] == $result['id_paket']) ? 'selected' : '';
-                                        echo "<option value='{$row_paket['id_paket']}' {$selected} data-harga='{$row_paket['harga']}'>{$row_paket['nama_paket']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control" name="mobil" value="<?php echo $result['nama_paket']; ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Tanggal Take</label>
-                                <input type="date" class="form-control" name="tgl_take" placeholder="" value="<?php echo IndonesiaTgl($result['tgl_take']); ?>">
+                                <input type="text" class="form-control" name="fromdate" placeholder="" value="<?php echo IndonesiaTgl($result['tgl_take']); ?>" readonly>
                             </div>
                             <div class="form-group">
-                                <label>Jam Take</label><br />
-                                <select class="form-control" name="jam_take" required>
-                                    <option value="" selected>== Pilih Jam ==</option>
-                                    <option value="07:00">07:00</option>
-                                    <option value="08:00">08:00</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
-                                    <option value="18:00">18:00</option>
-                                    <option value="19:00">19:00</option>
-                                </select>
+                                <label>Jam</label>
+                                <input type="text" class="form-control" name="todate" placeholder="" value="<?php echo $result['jam_take']; ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Biaya</label><br />
-                                <input type="text" class="form-control" name="pemasukkan" value="" readonly>
+                                <input type="text" class="form-control" name="total" value="<?php echo format_rupiah($result['harga']); ?>" readonly>
                             </div>
-
                             <div class="form-group">
                                 <label>Catatan</label><br />
-                                <textarea class="form-control" name="catatan"><?php echo $result['catatan']; ?></textarea>
+                                <textarea class="form-control" readonly><?php echo $result['catatan']; ?></textarea>
                             </div>
-
+                            <div class="form-group">
+                                <label>Upload Bukti Pembayaran</label><br />
+                                <input type="file" class="form-control" name="img1" accept="image/*" required>
+                            </div>
                             <div class="hr-dashed"></div>
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit" name="submit">Submit</button>
@@ -149,14 +128,4 @@ if (strlen($_SESSION['ulogin']) == 0) {
     </body>
 
     </html>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#id_paket").change(function() {
-                var harga = $("option:selected", this).data("harga");
-                $("input[name='pemasukkan']").val(harga);
-            });
-        });
-    </script>
-
 <?php } ?>
