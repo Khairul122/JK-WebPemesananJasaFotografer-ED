@@ -1,13 +1,13 @@
 <?php
 session_start();
 error_reporting(0);
-include('includes/config.php');
-include('includes/format_rupiah.php');
-include('includes/library.php');
+include 'includes/config.php';
+include 'includes/format_rupiah.php';
+include 'includes/library.php';
 if (strlen($_SESSION['alogin']) == 0) {
     header('location:index.php');
 } else {
-?>
+    ?>
 
     <!doctype html>
     <html lang="en" class="no-js">
@@ -71,10 +71,10 @@ if (strlen($_SESSION['alogin']) == 0) {
     </head>
 
     <body>
-        <?php include('includes/header.php'); ?>
+        <?php include 'includes/header.php';?>
 
         <div class="ts-main-content">
-            <?php include('includes/leftbar.php'); ?>
+            <?php include 'includes/leftbar.php';?>
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <h2 class="page-title">Laporan</h2>
@@ -93,22 +93,23 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     <div class="col-sm-4">
                                         <label>&nbsp;</label><br />
                                         <input type="submit" name="submit" value="Lihat Laporan" class="btn btn-primary">
+                                        <a href="laporanpendapatan.php?awal=<?php echo $_GET['awal'] ?? ''; ?>&akhir=<?php echo $_GET['akhir'] ?? ''; ?>" class="btn btn-primary">Laporan Pendapatan</a>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <?php
-                    if (isset($_GET['submit'])) {
-                        $no = 0;
-                        $mulai      = $_GET['awal'];
-                        $selesai = $_GET['akhir'];
-                        $stt     = "Sudah Dibayar";
-                        $stt1     = "Selesai";
-                        $sqlsewa = "SELECT * FROM transaksi WHERE (stt_trx='$stt' OR stt_trx='$stt1') AND tgl_bayar BETWEEN '$mulai' AND '$selesai'";
+if (isset($_GET['submit'])) {
+        $no = 0;
+        $mulai = $_GET['awal'];
+        $selesai = $_GET['akhir'];
+        $stt = "Sudah Dibayar";
+        $stt1 = "Selesai";
+        $sqlsewa = "SELECT * FROM transaksi WHERE (stt_trx='$stt' OR stt_trx='$stt1') AND tgl_bayar BETWEEN '$mulai' AND '$selesai'";
 
-                        $querysewa = mysqli_query($koneksidb, $sqlsewa);
-                    ?>
+        $querysewa = mysqli_query($koneksidb, $sqlsewa);
+        ?>
                         <!-- Zero Configuration Table -->
                         <div class="panel panel-default">
                             <div class="panel-heading">Laporan Booking Tanggal <?php echo IndonesiaTgl($mulai); ?> sampai <?php echo IndonesiaTgl($selesai); ?></div>
@@ -126,14 +127,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         </thead>
                                         <tbody>
                                             <?php
-                                            while ($result = mysqli_fetch_array($querysewa)) {
-                                                $paket = $result['id_paket'];
-                                                $sqlpaket = "SELECT * FROM paket WHERE id_paket='$paket'";
-                                                $querypaket = mysqli_query($koneksidb, $sqlpaket);
-                                                $res = mysqli_fetch_array($querypaket);
+while ($result = mysqli_fetch_array($querysewa)) {
+            $paket = $result['id_paket'];
+            $sqlpaket = "SELECT * FROM paket WHERE id_paket='$paket'";
+            $querypaket = mysqli_query($koneksidb, $sqlpaket);
+            $res = mysqli_fetch_array($querypaket);
 
-                                                $no++;
-                                            ?>
+            $no++;
+            ?>
                                                 <tr>
                                                     <td><?php echo $no; ?></td>
                                                     <td>
@@ -141,23 +142,23 @@ if (strlen($_SESSION['alogin']) == 0) {
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $tgl_trx = htmlentities($result['tgl_trx']);
-                                                        $tanggal_format = date('d F Y', strtotime($tgl_trx));
-                                                        echo $tanggal_format;
-                                                        ?>
+$tgl_trx = htmlentities($result['tgl_trx']);
+            $tanggal_format = date('d F Y', strtotime($tgl_trx));
+            echo $tanggal_format;
+            ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $tgl_bayar = htmlentities($result['tgl_bayar']);
-                                                        $tanggal_format = date('d F Y', strtotime($tgl_bayar));
-                                                        echo $tanggal_format;
-                                                        ?>
+$tgl_bayar = htmlentities($result['tgl_bayar']);
+            $tanggal_format = date('d F Y', strtotime($tgl_bayar));
+            echo $tanggal_format;
+            ?>
                                                     </td>
 
                                                     <td><?php echo format_rupiah($res['harga']); ?></td>
                                                 </tr>
                                             <?php }
-                                            ?>
+        ?>
 
                                         </tbody>
                                     </table>
@@ -167,7 +168,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                         <div class="form-group">
                             <a href="laporan_cetak.php?awal=<?php echo $mulai; ?>&akhir=<?php echo $selesai; ?>" target="_blank" class="btn btn-primary">Cetak</a>
                         </div>
-                    <?php } ?>
+                    <?php }?>
 
                     <!-- Large modal -->
                     <div class="modal fade bs-example-modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -218,4 +219,4 @@ if (strlen($_SESSION['alogin']) == 0) {
     </body>
 
     </html>
-<?php } ?>
+<?php }?>

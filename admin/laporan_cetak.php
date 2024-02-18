@@ -1,7 +1,7 @@
 <?php
-include('includes/config.php');
-include('includes/format_rupiah.php');
-include('includes/library.php');
+include 'includes/config.php';
+include 'includes/format_rupiah.php';
+include 'includes/library.php';
 $awal = $_GET['awal'];
 $akhir = $_GET['akhir'];
 $stt = "Sudah Dibayar";
@@ -77,45 +77,48 @@ $querysewa = mysqli_query($koneksidb, $sqlsewa);
             <h5 class="text-center">Tanggal <?php echo IndonesiaTgl($awal) . " s/d " . IndonesiaTgl($akhir); ?></h5>
             <br />
             <table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kode booking</th>
-                        <th>Tanggal Booking</th>
-                        <th>Tanggal Bayar</th>
-                        <th>Total Bayar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $no = 0;
-                    $pemasukan = 0;
-                    while ($result = mysqli_fetch_array($querysewa)) {
-                        $paket = $result['id_paket'];
-                        $sqlpaket = "SELECT * FROM paket WHERE id_paket='$paket'";
-                        $querypaket = mysqli_query($koneksidb, $sqlpaket);
-                        $res = mysqli_fetch_array($querypaket);
-                        $pemasukan += $res['harga'];
-                        $no++;
-                    ?>
-                        <tr align="center">
-                            <td><?php echo $no; ?></td>
-                            <td><?php echo htmlentities($result['id_trx']); ?></td>
-                            <td><?php echo IndonesiaTgl(htmlentities($result['tgl_trx'])); ?></td>
-                            <td><?php echo IndonesiaTgl(htmlentities($result['tgl_bayar'])); ?></td>
-                            <td><?php echo format_rupiah($res['harga']); ?></td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-                <tfoot>
-                    <?php
-                    echo '<tr>';
-                    echo '<th colspan="4" class="text-center">Total Pemasukan</th>';
-                    echo '<th class="text-center">' . format_rupiah($pemasukan) . '</th>';
-                    echo '</tr>';
-                    ?>
-                </tfoot>
-            </table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Kode booking</th>
+            <th>Tanggal Booking</th>
+            <th>Tanggal Bayar</th>
+            <th>Nama Paket</th> <!-- Kolom baru yang ditambahkan -->
+            <th>Total Bayar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+$no = 0;
+$pemasukan = 0;
+while ($result = mysqli_fetch_array($querysewa)) {
+    $paket = $result['id_paket'];
+    $sqlpaket = "SELECT * FROM paket WHERE id_paket='$paket'";
+    $querypaket = mysqli_query($koneksidb, $sqlpaket);
+    $res = mysqli_fetch_array($querypaket);
+    $pemasukan += $res['harga'];
+    $no++;
+    ?>
+            <tr align="center">
+                <td><?php echo $no; ?></td>
+                <td><?php echo htmlentities($result['id_trx']); ?></td>
+                <td><?php echo IndonesiaTgl(htmlentities($result['tgl_trx'])); ?></td>
+                <td><?php echo IndonesiaTgl(htmlentities($result['tgl_bayar'])); ?></td>
+                <td><?php echo htmlentities($res['nama_paket']); ?></td> <!-- Menampilkan kode_paket -->
+                <td><?php echo format_rupiah($res['harga']); ?></td>
+            </tr>
+        <?php }?>
+    </tbody>
+    <tfoot>
+        <?php
+echo '<tr>';
+echo '<th colspan="5" class="text-center">Kas Masuk</th>'; // Perlu disesuaikan dengan jumlah kolom
+echo '<th class="text-center">' . format_rupiah($pemasukan) . '</th>';
+echo '</tr>';
+?>
+    </tfoot>
+</table>
+
 
 
         </div><!-- /.container -->
